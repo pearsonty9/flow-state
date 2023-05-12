@@ -1,0 +1,32 @@
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.month {
+    display: grid;
+    grid-template-columns: repeat(7, 100px);
+    grid-template-rows: repeat(5, 100px);
+}
+
+.day {
+    display: flex;
+    flex-direction: column;
+    background-color: #2e2e2e;
+    border: 1px black solid;
+}
+
+.selected {
+    border: 1px white solid
+}
+
+.event {
+    padding: 0;
+    margin: 0;
+}
+
+.event:hover {
+    background-color: #353535;
+    cursor: pointer;
+}

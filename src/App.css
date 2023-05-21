@@ -37,10 +37,14 @@
 .event {
     padding: 0;
     margin: 0;
+    font-size: 10pt;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .event:hover {
-    background-color: #353535;
+    background-color: #424242;
     cursor: pointer;
 }
 

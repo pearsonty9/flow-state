@@ -1,0 +1,27 @@
+.modal {
+    background-color: rgb(42, 42, 42);
+    position: absolute;
+    width: 50%;
+    top: 30%;
+    left: 30%;
+    border: 2px solid #424242;
+    border-radius: 0.25rem;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    padding: 1rem;
+    text-align: left;
+}
+
+.modal-header {
+    grid-area: auto / span 2;
+}
+
+.modal-buttons {
+    grid-area: auto / 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}

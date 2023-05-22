@@ -1,9 +1,14 @@
 .modal {
+    --modal-width: 50%;
+    --modal-height: 200px;
+    --calendar-rows: 5;
+    --modal-range: calc((var(--calendar-rows) * var(--date-height)) - var(--modal-height));
     background-color: rgb(42, 42, 42);
     position: absolute;
-    width: 50%;
-    top: 30%;
-    left: 30%;
+    width: var(--modal-width);
+    height: var(--modal-height);
+    top: calc((var(--date-top) / 4) * var(--modal-range));
+    left: calc(var(--date-width) * var(--date-left) + var(--modal-offset));
     border: 2px solid #424242;
     border-radius: 0.25rem;
     z-index: 2;
@@ -11,7 +16,7 @@
     grid-template-columns: 1fr 2fr;
     grid-column-gap: 5px;
     grid-row-gap: 5px;
-    padding: 1rem;
+    padding: 0.75rem;
     text-align: left;
 }
 

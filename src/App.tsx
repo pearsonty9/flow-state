@@ -23,9 +23,9 @@ function App() {
         setWeeks(emptyWeeks)
     }, [])
 
-    const handleChangeDate = (
+    const handleCreateEvent = (
         event:
-            | React.MouseEvent<HTMLDivElement>
+            | React.MouseEvent<SVGSVGElement>
             | React.KeyboardEvent<HTMLDivElement>,
         i: number,
         j: number
@@ -33,10 +33,8 @@ function App() {
         event?.stopPropagation()
         const date = i * 7 + j
         if (date === focusedDate) {
-            console.log(`create event for ${date}`)
             setShowCreateEvent(true)
         } else if (showCreateEvent) setShowCreateEvent(false)
-        console.log(weeks[Math.floor(date / 7)][date % 7])
     }
 
     const createEvent = (date: Date, event: Event) => {
@@ -45,6 +43,8 @@ function App() {
         setWeeks(updatedWeeks)
         setShowCreateEvent(false)
     }
+
+    console.log(showCreateEvent)
 
     return (
         <div style={{ position: 'relative' }}>
@@ -60,23 +60,24 @@ function App() {
                             }
                             onFocus={() => setFocusedDate(date.day)}
                             onClick={() => setShowCreateEvent(false)}
+                            onDoubleClick={() => {if (date.day == focusedDate) setShowCreateEvent(true)}}
                             onKeyUp={(event) => {
                                 if (event.key === 'Enter')
-                                    handleChangeDate(event, i, j)
+                                    handleCreateEvent(event, i, j)
                             }}
                         >
                             {date.day}
                             <ul>
                                 {date.events.map((event) => (
-                                    <p className='event'>{event.summary}</p>
+                                    <p className="event">{event.summary}</p>
                                 ))}
                             </ul>
                             <FontAwesomeIcon
                                 className="add"
                                 icon={faPlus}
                                 onClick={(
-                                    event: React.MouseEvent<HTMLDivElement>
-                                ) => handleChangeDate(event, i, j)}
+                                    event: React.MouseEvent<SVGSVGElement>
+                                ) => handleCreateEvent(event, i, j)}
                             />
                         </div>
                     ))

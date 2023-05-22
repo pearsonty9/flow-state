@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Date, Event } from './types'
 import './CreateEvent.css'
 
@@ -18,6 +17,8 @@ export default function CreateEvent({
         summary: '',
         description: '',
     })
+    const [topOffset, setTopOffset] = useState(0)
+    const [leftOffset, setLeftOffset] = useState(0)
 
     const handleEventDataChange = (
         event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -27,7 +28,17 @@ export default function CreateEvent({
     }
 
     return (
-        <form className="modal">
+        <form
+            className="modal"
+            style={{
+                '--date-top': Math.floor(date.day / 7),
+                '--date-left': date.day % 7,
+                '--modal-offset':
+                    date.day % 7 < 7 / 2
+                        ? 'var(--date-width)'
+                        : 'calc(var(--modal-width) * -1)',
+            }}
+        >
             <h4 className="modal-header">
                 {date.month} {date.day}
             </h4>

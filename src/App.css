@@ -1,17 +1,22 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+:root {
+    --date-width: 100px;
+    --date-height: 100px;
 }
 
 #root {
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
 }
 
 .month {
     display: grid;
-    grid-template-columns: repeat(7, 100px);
-    grid-template-rows: repeat(5, 100px);
+    grid-template-columns: repeat(7, var(--date-width));
+    grid-template-rows: repeat(5, var(--date-width));
 }
 
 .day {
@@ -23,11 +28,13 @@
     position: relative;
 }
 
-.day:hover .add, .day:focus .add {
+.day:hover .add,
+.day:focus .add {
     display: block;
 }
 
-.selected, .day:focus {
+.selected,
+.day:focus {
     /* border: white solid 2px; */
     box-shadow: inset 0 0 3px 2px white;
     border-radius: 5px;

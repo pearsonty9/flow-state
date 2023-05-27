@@ -7,7 +7,7 @@
     position: absolute;
     width: var(--modal-width);
     height: var(--modal-height);
-    top: calc((var(--date-top) / 4) * var(--modal-range));
+    top: calc((var(--date-top) / 4) * var(--modal-range) + 32px);
     left: calc(var(--date-width) * var(--date-left) + var(--modal-offset));
     border: 2px solid #424242;
     border-radius: 0.25rem;

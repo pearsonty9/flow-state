@@ -1,15 +1,20 @@
-import { useState, useEffect } from 'react'
-import { Date, Event } from './types'
+import { useState } from 'react'
+import { Event } from './types'
+import { CustomDate } from './CustomDate'
 import './CreateEvent.css'
 
 type CreateEventProps = {
-    date: Date
+    date: CustomDate,
+    i: number,
+    j: number,
     setShow: (a: boolean) => void
-    createEvent: (date: Date, event: Event) => void
+    createEvent: (i:number, j:number, event: Event) => void
 }
 
 export default function CreateEvent({
     date,
+    i,
+    j,
     setShow,
     createEvent,
 }: CreateEventProps) {
@@ -17,8 +22,6 @@ export default function CreateEvent({
         summary: '',
         description: '',
     })
-    const [topOffset, setTopOffset] = useState(0)
-    const [leftOffset, setLeftOffset] = useState(0)
 
     const handleEventDataChange = (
         event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -31,16 +34,16 @@ export default function CreateEvent({
         <form
             className="modal"
             style={{
-                '--date-top': Math.floor(date.day / 7),
-                '--date-left': date.day % 7,
+                '--date-top': i,
+                '--date-left': j,
                 '--modal-offset':
-                    date.day % 7 < 7 / 2
+                    j < 7 / 2
                         ? 'var(--date-width)'
                         : 'calc(var(--modal-width) * -1)',
             }}
         >
             <h4 className="modal-header">
-                {date.month} {date.day}
+                {date.toDateString()}
             </h4>
             <h4>Summary:</h4>
             <input
@@ -56,7 +59,7 @@ export default function CreateEvent({
                 onChange={(event) => handleEventDataChange(event)}
             />
             <div className="modal-buttons">
-                <button onClick={() => createEvent(date, eventData)}>
+                <button onClick={() => createEvent(i, j, eventData)}>
                     Create Event
                 </button>
                 <button onClick={() => setShow(false)}>Cancel</button>

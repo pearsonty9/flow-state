@@ -16,7 +16,7 @@
 .month {
     display: grid;
     grid-template-columns: repeat(7, var(--date-width));
-    grid-template-rows: repeat(5, var(--date-width));
+    grid-template-rows: 1fr repeat(5, var(--date-width));
 }
 
 .day {

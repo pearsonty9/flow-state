@@ -6,11 +6,8 @@ export class CustomDate extends Date {
         year: number,
         month: number,
         day: number,
-        hours: number,
-        minutes: number,
-        seconds: number
     ) {
-        if (year) super(year, month, day, hours, minutes, seconds)
+        if (year) super(year, month, day)
         else super()
     }
 }

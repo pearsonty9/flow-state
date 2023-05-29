@@ -3,8 +3,8 @@
 }
 
 :root {
-    --date-width: 100px;
-    --date-height: 100px;
+    --date-width: 10rem;
+    --date-height: var(--date-width);
 }
 
 #root {
@@ -16,16 +16,20 @@
 .month {
     display: grid;
     grid-template-columns: repeat(7, var(--date-width));
-    grid-template-rows: 1fr repeat(5, var(--date-width));
+    grid-template-rows: 1fr repeat(6, var(--date-width));
 }
 
 .day {
     display: flex;
     flex-direction: column;
+    outline: 2px rgb(20, 20, 20) solid;
     background-color: #2e2e2e;
-    border: 1px black solid;
     padding: 0.25rem;
     position: relative;
+}
+
+.day.faded {
+    color: rgba(185, 185, 185, 0.63);
 }
 
 .day:hover .add,
@@ -62,8 +66,6 @@
     padding: 6px;
     border-radius: 100%;
     text-align: center;
-    /* line-height: 25px; */
-    /* font-size: 15px; */
     position: absolute;
     bottom: 0.3rem;
     right: 0.25rem;

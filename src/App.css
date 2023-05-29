@@ -5,6 +5,7 @@
 :root {
     --date-width: 10rem;
     --date-height: var(--date-width);
+    --calendar-border-color: rgb(36, 36, 36);
 }
 
 #root {
@@ -16,13 +17,16 @@
 .month {
     display: grid;
     grid-template-columns: repeat(7, var(--date-width));
-    grid-template-rows: 1fr repeat(6, var(--date-width));
+    grid-template-rows: 1fr repeat(5, var(--date-width));
+    grid-auto-rows: var(--date-width);
+    gap: 2px;
+    background-color: var(--calendar-border-color);
+    border: 2px var(--calendar-border-color) solid;
 }
 
 .day {
     display: flex;
     flex-direction: column;
-    outline: 2px rgb(20, 20, 20) solid;
     background-color: #2e2e2e;
     padding: 0.25rem;
     position: relative;
@@ -61,8 +65,8 @@
 
 .add {
     display: none;
-    width: 12px;
-    height: 12px;
+    width: 1rem;
+    height: 1rem;
     padding: 6px;
     border-radius: 100%;
     text-align: center;

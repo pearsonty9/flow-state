@@ -38,7 +38,7 @@ export default function CreateEvent({
                 '--date-left': j,
                 '--modal-offset':
                     j < 7 / 2
-                        ? 'var(--date-width)'
+                        ? 'calc(var(--date-width) + 3px )'
                         : 'calc(var(--modal-width) * -1)',
             }}
         >

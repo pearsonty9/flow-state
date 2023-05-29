@@ -2,13 +2,15 @@
     --modal-width: 400px;
     --modal-height: 200px;
     --calendar-rows: 5;
-    --modal-range: calc((var(--calendar-rows) * var(--date-height)) - var(--modal-height));
+    --width: calc(var(--date-width) + 2px);
+    --height: calc(var(--date-height) + 2px);
+    --modal-range: calc((var(--calendar-rows) * var(--height)) - var(--modal-height));
     background-color: rgb(42, 42, 42);
     position: absolute;
     width: var(--modal-width);
     height: var(--modal-height);
-    top: calc((var(--date-top) / 4) * var(--modal-range) + 32px);
-    left: calc(var(--date-width) * var(--date-left) + var(--modal-offset));
+    top: calc((var(--date-top) / 4) * var(--modal-range) + 34px);
+    left: calc(var(--width) * var(--date-left) + var(--modal-offset));
     border: 2px solid #424242;
     border-radius: 0.25rem;
     z-index: 2;

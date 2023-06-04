@@ -3,7 +3,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import CreateEvent from './CreateEvent'
-import { Event } from './types'
+import DisplayEvent from './DisplayEvent.tsx'
+import { CalendarEvent } from './types'
 import { CustomDate } from './CustomDate.ts'
 import './App.css'
 
@@ -30,7 +31,9 @@ function App() {
     const [month, setMonth] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), 1))
     const [weeks, setWeeks] = useState<CustomDate[][]>([])
     const [focusedDate, setFocusedDate] = useState({ i: 0, j: 0 })
+    const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | undefined>()
     const [showCreateEvent, setShowCreateEvent] = useState(false)
+    const [showEvent, setShowEvent] = useState(false)
 
     const setupCalendar = useCallback(
         (currentDate: Date) => {
@@ -75,18 +78,25 @@ function App() {
         setupCalendar(month)
     }, [month, setupCalendar])
 
-    function handleCreateEvent(
+    function handleShowCreateEvent(
         event: React.MouseEvent<SVGSVGElement> | React.KeyboardEvent<HTMLDivElement>,
         i: number,
         j: number
     ) {
         event?.stopPropagation()
         if (i === focusedDate.i && j === focusedDate.j) {
+            setShowEvent(false)
             setShowCreateEvent(true)
         } else if (showCreateEvent) setShowCreateEvent(false)
     }
 
-    function createEvent(i: number, j: number, event: Event) {
+    function handleShowEventDetails(event: CalendarEvent) {
+        setSelectedEvent(event)
+        setShowCreateEvent(false)
+        setShowEvent(true)
+    }
+
+    function createEvent(i: number, j: number, event: CalendarEvent) {
         const updatedWeeks = [...weeks]
         updatedWeeks[i][j].events.push(event)
         setWeeks(updatedWeeks)
@@ -94,22 +104,17 @@ function App() {
     }
 
     function updateMonth(value: number) {
-        if (focusedDate.i >= 5)
-            setFocusedDate({ i: focusedDate.i - 1, j: focusedDate.j})
+        console.log(focusedDate)
+        if (focusedDate.i >= 5) setFocusedDate({ i: focusedDate.i - 1, j: focusedDate.j })
         month.setMonth(value)
         setMonth(new Date(month.toISOString()))
     }
 
     function jumpToToday() {
         updateMonth(today.getMonth())
-        for (let i = 0; i < weeks.length; i++) {
-            for (let j = 0; j < weeks[i].length; j++) {
-                if (weeks[i][j].getDate() === today.getDate()) {
-                    setFocusedDate({ i, j })
-                    break
-                }
-            }
-        }
+        const offset = new Date(today.getFullYear(), today.getMonth(), 1).getDay()
+        const row = Math.floor((today.getDate() + offset - 1) / 7)
+        setFocusedDate({ i: row, j: today.getDay() })
     }
 
     // console.log(showCreateEvent)
@@ -120,9 +125,7 @@ function App() {
                 <button onClick={() => jumpToToday()}>TODAY</button>
                 <button onClick={() => updateMonth(month.getMonth() - 1)}>PREV</button>
                 <button onClick={() => updateMonth(month.getMonth() + 1)}>NEXT</button>
-                <h2>
-                    {month.toLocaleDateString('en-US', options)}
-                </h2>
+                <h2>{month.toLocaleDateString('en-US', options)}</h2>
             </div>
             <div style={{ position: 'relative' }}>
                 <div className="month">
@@ -140,23 +143,36 @@ function App() {
                                 tabIndex={i * 7 + j + 1}
                                 className={
                                     'day ' +
-                                    (date.getTime() == weeks[focusedDate.i][focusedDate.j].getTime() ? 'selected ' : '') +
+                                    (date.getTime() == weeks[focusedDate.i][focusedDate.j]?.getTime()
+                                        ? 'selected '
+                                        : '') +
                                     (date.getMonth() !== month.getMonth() ? 'faded' : '')
                                 }
-                                onFocus={() => setFocusedDate({ i, j })}
+                                onFocus={() => {
+                                    setFocusedDate({ i, j })
+                                    setShowEvent(false)
+                                    setShowCreateEvent(false)
+                                }}
                                 onClick={() => setShowCreateEvent(false)}
                                 onDoubleClick={() => {
-                                    if (date.getTime() == weeks[focusedDate.i][focusedDate.j].getTime())
+                                    if (date.getTime() == weeks[focusedDate.i][focusedDate.j].getTime()) {
+                                        setShowEvent(false)
                                         setShowCreateEvent(true)
+                                    }
                                 }}
                                 onKeyUp={(event) => {
-                                    if (event.key === 'Enter') handleCreateEvent(event, i, j)
+                                    if (event.key === 'Enter') handleShowCreateEvent(event, i, j)
+                                    if (event.key === 'Tab') event.stopPropagation()
                                 }}
                             >
                                 {date.getDate()}
                                 <ul>
                                     {date.events.map((event, index) => (
-                                        <p key={event.summary + index} className="event">
+                                        <p
+                                            key={event.summary + index}
+                                            className="event"
+                                            onClick={() => handleShowEventDetails(event)}
+                                        >
                                             {event.summary}
                                         </p>
                                     ))}
@@ -164,7 +180,9 @@ function App() {
                                 <FontAwesomeIcon
                                     className="add"
                                     icon={faPlus}
-                                    onClick={(event: React.MouseEvent<SVGSVGElement>) => handleCreateEvent(event, i, j)}
+                                    onClick={(event: React.MouseEvent<SVGSVGElement>) =>
+                                        handleShowCreateEvent(event, i, j)
+                                    }
                                 />
                             </div>
                         ))
@@ -177,6 +195,15 @@ function App() {
                         j={focusedDate.j}
                         setShow={setShowCreateEvent}
                         createEvent={createEvent}
+                    />
+                )}
+                {showEvent && (
+                    <DisplayEvent
+                        date={weeks[focusedDate.i][focusedDate.j]}
+                        event={selectedEvent}
+                        i={focusedDate.i}
+                        j={focusedDate.j}
+                        setShow={setShowEvent}
                     />
                 )}
             </div>

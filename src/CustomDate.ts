@@ -1,7 +1,7 @@
-import { Event } from './types'
+import { CalendarEvent } from './types'
 
 export class CustomDate extends Date {
-    events: Array<Event> = []
+    events: Array<CalendarEvent> = []
     constructor(
         year: number,
         month: number,

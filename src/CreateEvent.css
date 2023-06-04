@@ -1,6 +1,6 @@
 .modal {
     --modal-width: 400px;
-    --modal-height: 200px;
+    --modal-height: 300px;
     --calendar-rows: 5;
     --width: calc(var(--date-width) + 2px);
     --height: calc(var(--date-height) + 2px);
@@ -31,4 +31,13 @@
     display: flex;
     justify-content: flex-end;
     gap: 5px;
+}
+
+.modal > label {
+    font-size: 14px;
+}
+
+.modal > .event-details {
+    text-overflow: ellipsis;
+    overflow: auto;
 }

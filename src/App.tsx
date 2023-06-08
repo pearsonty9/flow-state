@@ -1,16 +1,16 @@
-import * as React from 'react'
-import { useEffect, useState, useCallback } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import CreateEvent from './CreateEvent'
-import DisplayEvent from './DisplayEvent.tsx'
-import { CalendarEvent } from './types'
-import { CustomDate } from './CustomDate.ts'
-import './App.css'
+import * as React from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import CreateEvent from './CreateEvent';
+import DisplayEvent from './DisplayEvent.tsx';
+import { CalendarEvent } from './types';
+import { CustomDate } from './CustomDate.ts';
+import './App.css';
 
 function App() {
-    const MAX_WEEKS = 6
-    const DAYS_PER_WEEK = 7
+    const MAX_WEEKS = 6;
+    const DAYS_PER_WEEK = 7;
 
     const enum Day {
         Sunday = 0,
@@ -19,102 +19,102 @@ function App() {
         Wednesday = 3,
         Thursday = 4,
         Friday = 5,
-        Saturday = 6,
+        Saturday = 6
     }
 
-    const options: DateTimeFormatOptions = {
+    const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
-        month: 'long',
-    }
+        month: 'long'
+    };
 
-    const today = new Date()
-    const [month, setMonth] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), 1))
-    const [weeks, setWeeks] = useState<CustomDate[][]>([])
-    const [focusedDate, setFocusedDate] = useState({ i: 0, j: 0 })
-    const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | undefined>()
-    const [showCreateEvent, setShowCreateEvent] = useState(false)
-    const [showEvent, setShowEvent] = useState(false)
+    const today = new Date();
+    const [month, setMonth] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), 1));
+    const [weeks, setWeeks] = useState<CustomDate[][]>([]);
+    const [focusedDate, setFocusedDate] = useState({ i: 0, j: 0 });
+    const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | undefined>();
+    const [showCreateEvent, setShowCreateEvent] = useState(false);
+    const [showEvent, setShowEvent] = useState(false);
 
     const setupCalendar = useCallback(
         (currentDate: Date) => {
-            const calendarWeeks: CustomDate[][] = []
-            const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0)
-            const nextMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
-            const currentMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
-            let date
+            const calendarWeeks: CustomDate[][] = [];
+            const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+            const nextMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+            const currentMonthEndDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            let date;
 
-            let week: CustomDate[] = []
+            let week: CustomDate[] = [];
             if (lastMonthEnd.getDay() !== Day.Saturday) {
-                date = lastMonthEnd.getDate() - lastMonthEnd.getDay()
+                date = lastMonthEnd.getDate() - lastMonthEnd.getDay();
                 while (date <= lastMonthEnd.getDate()) {
-                    week.push(new CustomDate(lastMonthEnd.getFullYear(), lastMonthEnd.getMonth(), date))
-                    date++
+                    week.push(new CustomDate(lastMonthEnd.getFullYear(), lastMonthEnd.getMonth(), date));
+                    date++;
                 }
             }
 
-            date = 1
+            date = 1;
             for (let i = 0; i < MAX_WEEKS; i++) {
                 while (week.length < DAYS_PER_WEEK) {
-                    if (date > currentMonthEndDate) break
-                    week.push(new CustomDate(currentDate.getFullYear(), currentDate.getMonth(), date))
-                    date++
+                    if (date > currentMonthEndDate) break;
+                    week.push(new CustomDate(currentDate.getFullYear(), currentDate.getMonth(), date));
+                    date++;
                 }
 
                 if (week.length > 0 && week.length < 7) {
                     for (let k = 1; week.length < DAYS_PER_WEEK; k++)
-                        week.push(new CustomDate(nextMonthStart.getFullYear(), nextMonthStart.getMonth(), k))
+                        week.push(new CustomDate(nextMonthStart.getFullYear(), nextMonthStart.getMonth(), k));
                 }
 
-                calendarWeeks.push(week)
-                week = []
+                calendarWeeks.push(week);
+                week = [];
             }
 
-            setWeeks(calendarWeeks)
+            setWeeks(calendarWeeks);
         },
         [Day.Saturday]
-    )
+    );
 
     useEffect(() => {
-        setupCalendar(month)
-    }, [month, setupCalendar])
+        setupCalendar(month);
+    }, [month, setupCalendar]);
 
     function handleShowCreateEvent(
         event: React.MouseEvent<SVGSVGElement> | React.KeyboardEvent<HTMLDivElement>,
         i: number,
         j: number
     ) {
-        event?.stopPropagation()
+        event?.stopPropagation();
         if (i === focusedDate.i && j === focusedDate.j) {
-            setShowEvent(false)
-            setShowCreateEvent(true)
-        } else if (showCreateEvent) setShowCreateEvent(false)
+            setShowEvent(false);
+            setShowCreateEvent(true);
+        } else if (showCreateEvent) setShowCreateEvent(false);
     }
 
     function handleShowEventDetails(event: CalendarEvent) {
-        setSelectedEvent(event)
-        setShowCreateEvent(false)
-        setShowEvent(true)
+        setSelectedEvent(event);
+        setShowCreateEvent(false);
+        setShowEvent(true);
     }
 
     function createEvent(i: number, j: number, event: CalendarEvent) {
-        const updatedWeeks = [...weeks]
-        updatedWeeks[i][j].events.push(event)
-        setWeeks(updatedWeeks)
-        setShowCreateEvent(false)
+        const updatedWeeks = [...weeks];
+        updatedWeeks[i][j].events.push(event);
+        setWeeks(updatedWeeks);
+        setShowCreateEvent(false);
     }
 
     function updateMonth(value: number) {
-        console.log(focusedDate)
-        if (focusedDate.i >= 5) setFocusedDate({ i: focusedDate.i - 1, j: focusedDate.j })
-        month.setMonth(value)
-        setMonth(new Date(month.toISOString()))
+        console.log(focusedDate);
+        if (focusedDate.i >= 5) setFocusedDate({ i: focusedDate.i - 1, j: focusedDate.j });
+        month.setMonth(value);
+        setMonth(new Date(month.toISOString()));
     }
 
     function jumpToToday() {
-        updateMonth(today.getMonth())
-        const offset = new Date(today.getFullYear(), today.getMonth(), 1).getDay()
-        const row = Math.floor((today.getDate() + offset - 1) / 7)
-        setFocusedDate({ i: row, j: today.getDay() })
+        updateMonth(today.getMonth());
+        const offset = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
+        const row = Math.floor((today.getDate() + offset - 1) / 7);
+        setFocusedDate({ i: row, j: today.getDay() });
     }
 
     // console.log(showCreateEvent)
@@ -149,20 +149,20 @@ function App() {
                                     (date.getMonth() !== month.getMonth() ? 'faded' : '')
                                 }
                                 onFocus={() => {
-                                    setFocusedDate({ i, j })
-                                    setShowEvent(false)
-                                    setShowCreateEvent(false)
+                                    setFocusedDate({ i, j });
+                                    setShowEvent(false);
+                                    setShowCreateEvent(false);
                                 }}
                                 onClick={() => setShowCreateEvent(false)}
                                 onDoubleClick={() => {
                                     if (date.getTime() == weeks[focusedDate.i][focusedDate.j].getTime()) {
-                                        setShowEvent(false)
-                                        setShowCreateEvent(true)
+                                        setShowEvent(false);
+                                        setShowCreateEvent(true);
                                     }
                                 }}
                                 onKeyUp={(event) => {
-                                    if (event.key === 'Enter') handleShowCreateEvent(event, i, j)
-                                    if (event.key === 'Tab') event.stopPropagation()
+                                    if (event.key === 'Enter') handleShowCreateEvent(event, i, j);
+                                    if (event.key === 'Tab') event.stopPropagation();
                                 }}
                             >
                                 {date.getDate()}
@@ -185,7 +185,7 @@ function App() {
                                     }
                                 />
                             </div>
-                        ))
+                        ));
                     })}
                 </div>
                 {showCreateEvent && (
@@ -208,7 +208,7 @@ function App() {
                 )}
             </div>
         </>
-    )
+    );
 }
 
-export default App
+export default App;

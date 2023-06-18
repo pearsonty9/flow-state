@@ -37,6 +37,7 @@
 .day:hover .add,
 .day:focus .add {
     display: block;
+    color: white;
 }
 
 .selected,
@@ -56,6 +57,7 @@
 }
 
 .event:hover {
+    color: white;
     background-color: #424242;
     cursor: pointer;
 }
